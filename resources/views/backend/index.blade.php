@@ -296,11 +296,33 @@
 
 <!-- Your existing table for displaying emails -->
 <div class="panel-body">
-    <!-- Button to send selected emails -->
-    <button id="send-selected-emails" class="btn btn-primary mb-3">Send Email to Selected</button>
+
 
     <!-- Table to display emails with checkboxes -->
     <div class="table-responsive">
+        @if(session('success'))
+        <script>
+            Swal.fire({
+                title: 'Success!',
+                text: '{{ session("success") }}',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
+        </script>
+        @endif
+
+        @php
+$currentSort = request('sort', 'desc'); // Get current sort order, default to 'desc'
+@endphp
+
+          {{-- ✅ Sorting Buttons (Correct Position) --}}
+          <div class="mb-3 d-flex justify-content-end">
+            <!-- Button to send selected emails -->
+            <button id="send-selected-emails" class="btn btn-primary mb-3">Send Email to Selected</button>
+            <a href="{{ route('admin.index', ['sort' => 'asc']) }}" class="btn btn-primary btn-sm me-2"> Ascending</a>
+<a href="{{ route('admin.index', ['sort' => 'desc']) }}" class="btn btn-sm {{ $currentSort == 'desc' ? 'btn-success' : 'btn-secondary' }}"> Descending </a>
+
+        </div>
         <table id="dataTableExample1" class="table table-bordered table-striped table-hover">
             <thead>
                 <tr class="info">
@@ -309,22 +331,24 @@
                     <th style="width: 14%;">Name</th>
                     <th style="width: 15%;">Email</th>
                     <th style="width: 10%;">Phone</th>
+                    <th style="width: 10%;">Url</th>
                     <th style="width: 10%;">Country</th>
-                    <th style="width: 10%;">From</th>
+                    {{--  <th style="width: 10%;">From</th>  --}}
                     <th style="width: 5%;">Status</th>
                     <th class="text-center" style="width: 10%;">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($enquirey as $enquiry)
+                @foreach ($enquiry as $enquiry)
                     <tr>
                         <td><input type="checkbox" class="email-checkbox" value="{{ $enquiry->email }}"></td>
                         <td>{{ \Carbon\Carbon::parse($enquiry->created_at)->format('Y-m-d') }}</td>
                         <td>{{ $enquiry->name }}</td>
                         <td>{{ $enquiry->email }}</td>
                         <td>{{ $enquiry->phone }}</td>
+                        <td>{{ $enquiry->url }}</td>
                         <td>{{ $enquiry->country }}</td>
-                        <td>{{ $enquiry->from }}</td>
+                        {{--  <td>{{ $enquiry->from }}</td>  --}}
                         <td class="text-center">
                             <span class="badge custom-badge {{ $enquiry->status == 1 ? 'badge-success' : 'badge-danger' }}">
                                 {{ $enquiry->status == 1 ? 'Active' : 'Disabled' }}

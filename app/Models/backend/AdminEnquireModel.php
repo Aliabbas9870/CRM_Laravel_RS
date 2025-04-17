@@ -9,9 +9,12 @@ class AdminEnquireModel extends Model
 {
     use HasFactory;
 
+
+    protected $connection = 'second_db'; // no space before or after
+
     protected $table = 'enquiries';
     public $timestamps = false;
-    protected $primaryKey = 'id'; // Use this instead of $id = 'id';
+
 
     protected $fillable = [
         'name',
@@ -29,5 +32,6 @@ class AdminEnquireModel extends Model
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
+    // protected $primaryKey = 'id'; // Use this instead of $id = 'id';
 
 }

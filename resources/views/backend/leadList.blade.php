@@ -35,6 +35,27 @@
                             });
                         </script>
                         @endif
+
+                        @php
+    $currentSort = request('sort', 'desc'); // Get current sort order, default to 'desc'
+@endphp
+
+{{--  <a href="{{ route('admin.leadList', ['sort' => 'asc']) }}"
+   class="btn btn-sm {{ $currentSort == 'asc' ? 'btn-success' : 'btn-primary' }}">
+   Sort Ascending
+</a>  --}}
+
+
+
+                        {{-- ✅ Sorting Buttons (Correct Position) --}}
+                        <div class="mb-3 d-flex justify-content-end">
+                            <a href="{{ route('admin.leadList', ['sort' => 'asc']) }}" class="btn btn-primary btn-sm me-2"> Ascending</a>
+                            <a href="{{ route('admin.leadList', ['sort' => 'desc']) }}"
+                                class="btn btn-sm {{ $currentSort == 'desc' ? 'btn-success' : 'btn-secondary' }}">
+                                Descending
+                             </a>
+                        </div>
+
                         <div class="table-responsive">
                             <table id="dataTableExample1" class="table table-bordered table-striped table-hover">
                                 <thead>
@@ -43,22 +64,24 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Phone</th>
+                                        <th>Prefer Contact</th>
                                         <th>Country</th>
+                                        <th>Url</th>
                                         <th>Notes</th>
                                         <th>Status</th>
-                                        <th>Assign Task</th> <!-- Add this column for task assignment -->
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach ($enquiry as $enquiry)
                                     <tr>
-                                        <td>{{ $enquiry->created_at->format('Y-m-d') }}</td> <!-- Format the date -->
+                                        <td>{{ $enquiry->created_at->format('Y-m-d') }}</td>
                                         <td>{{ $enquiry->name }}</td>
                                         <td>{{ $enquiry->email }}</td>
                                         <td>{{ $enquiry->phone }}</td>
+                                        <td>{{ $enquiry->prefer_contact_type }}</td>
                                         <td>{{ $enquiry->country }}</td>
+                                        <td>{{ $enquiry->url }}</td>
                                         <td>{{ $enquiry->note }}</td>
-                                        {{-- <td>{{ $enquiry->id }}</td> --}}
                                         <td class="text-center">
                                             @if($enquiry->status == 1)
                                             <span class="badge badge-success custom-badge">Active</span>
@@ -66,26 +89,6 @@
                                             <span class="badge badge-danger custom-badge">Disabled</span>
                                             @endif
                                         </td>
-
-                                        <td>
-                                            <form action="{{ url('/admin/enquiries/assign') }}" method="POST">
-                                                @csrf
-                                                <div class="form-group">
-                                                    <!-- Dropdown to select a user -->
-                                                    <select name="user_id" class="form-control" required>
-                                                        <option value="" disabled selected>Select User</option>
-                                                        @foreach ($users as $user)
-                                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                </div>
-                                                <input type="hidden" name="enquiry_id" value="{{ $enquiry->id }}"> <!-- Pass the enquiry ID -->
-                                                <button type="submit" class="btn btn-primary btn-sm">Assign Task</button>
-                                            </form>
-                                        </td>
-
-
-
                                     </tr>
                                     @endforeach
                                 </tbody>

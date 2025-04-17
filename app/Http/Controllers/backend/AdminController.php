@@ -59,38 +59,40 @@ class AdminController extends Controller
     }
 
     // Display admin dashboard
-    public function index()
+    public function index(Request $request)
     {
+        // Get the sorting order from the URL query parameter (default to 'desc')
+        $sortOrder = $request->get('sort', 'desc');
 
-
+        // Fetch the enquiries with sorting by created_at field
+        $enquiry = AdminEnquireModel::orderBy('created_at', $sortOrder)->get();
 
         if (session()->has('email')) {
-            // if($request->session()->exists('email')){
-            // dd('Yes');
             $tasks = Task::orderBy('created_at', 'desc')->get();
             $Name = session('name') . " " . session('email');
             $TotalAdminModel = Admin::count();
-            $tasks = Task ::all();
-            $taskTotal = Task ::count();
-            $TotalTeamMember=User ::count();
-            $TotalEnqury=AdminEnquireModel::count();
+            $taskTotal = Task::count();
+            $TotalTeamMember = User::count();
+            $TotalEnqury = AdminEnquireModel::count();
             $completedTasksCount = $tasks->where('is_completed', true)->count();
             $incompleteTasksCount = $tasks->where('is_completed', false)->count();
 
-
-        return view('backend.index',['enquirey' => AdminEnquireModel ::get()],compact(
-            'TotalEnqury','TotalTeamMember','TotalAdminModel','tasks'
-            ,"taskTotal","incompleteTasksCount","completedTasksCount") );
-
+            return view('backend.index', [
+                // 'enquirey' => AdminEnquireModel::get(),
+                'enquiry' => $enquiry, // Pass the sorted enquiries to the view
+                'TotalEnqury' => $TotalEnqury,
+                'TotalTeamMember' => $TotalTeamMember,
+                'TotalAdminModel' => $TotalAdminModel,
+                'tasks' => $tasks,
+                'taskTotal' => $taskTotal,
+                'incompleteTasksCount' => $incompleteTasksCount,
+                'completedTasksCount' => $completedTasksCount
+            ]);
         } else {
             return view('backend.adminLogin');
         }
-
-
-
-
-
-
-// Return your admin dashboard view
     }
+
+
+
 }

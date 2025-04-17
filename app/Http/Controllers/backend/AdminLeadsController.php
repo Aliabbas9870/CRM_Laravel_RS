@@ -11,22 +11,37 @@ use App\Models\User;
 class AdminLeadsController extends Controller
 {
     // Display the list of all leads
-    public function index()
-    {
+    // public function index()
+    // {
 
-        $enquiry = AdminEnquireModel ::all();
+    //     $enquiry = AdminEnquireModel ::all();
 
-        // echo "<pre>";
-        // print_r($enquiry);
-        // echo "</pre>";
-        // die;
-        // Fetch all enquiries
-        $users = User::all(); // Fetch all users to assign tasks
-        return view('backend.leadList', compact('enquiry', 'users'));
-        // return view('backend.leadList', ['enquiry' => AdminEnquireModel::all()]);
-    }
+    //     // echo "<pre>";
+    //     // print_r($enquiry);
+    //     // echo "</pre>";
+    //     // die;
+    //     // Fetch all enquiries
+    //     $users = User::all(); // Fetch all users to assign tasks
+    //     return view('backend.leadList', compact('enquiry', 'users'));
+    //     // return view('backend.leadList', ['enquiry' => AdminEnquireModel::all()]);
+    // }
 
 
+
+    public function index(Request $request)
+{
+    // Get the sorting order from the URL query parameter (default to 'desc')
+    $sortOrder = $request->get('sort', 'desc');
+
+    // Fetch the enquiries with sorting by created_at field
+    $enquiry = AdminEnquireModel::orderBy('created_at', $sortOrder)->get();
+
+    // Fetch all users to assign tasks
+    $users = User::all();
+
+    // Return the view with enquiries and users
+    return view('backend.leadList', compact('enquiry', 'users'));
+}
 
     public function assignTask(Request $request)
     {
@@ -127,27 +142,6 @@ public function UpdateRecordLead(Request $request, $id)
 }
 
 
-    // Assign a task to a user by email and link with enquiry
-//   public function assignTask(Request $request, $id)
-//     {
-
-//     // info('Assigning task', ['id' => $id, 'email' => $request->email, 'task_name' => $request->task_name]);
-//         $request->validate([
-//             'email' => 'required|email|exists:users,email',
-
-//         ]);
-
-//         $enquiry = AdminEnquireModel::findOrFail($id);
-
-//         // Update the enquiry to assign the task
-//         $enquiry->update([
-//             'email' => $request->email, // Assuming this column exists
-
-//             'status' => 'pending', // Set status to pending or whatever is appropriate
-//         ]);
-
-//         return back()->with('success', 'Task assigned successfully.');
-//     }
 
 
     // Remove the specified lead from storage
@@ -158,34 +152,6 @@ public function UpdateRecordLead(Request $request, $id)
     }
 
 
-
-
-    // public function editFAQ($id)
-    // {
-    //     // dd($id);
-    //     $faqs = FAQs::where('id', $id)->first();
-    //     return view('backend.faqedit', ['faqs' => $faqs]);
-    // }
-
-    // public function updateFAQ(Request $request, $id)
-    // {
-
-    //     $request->validate(
-    //         [
-    //             'question' => 'required',
-    //             'answer' => 'required'
-    //         ]
-    //         );
-
-    //     $faqs = FAQs::where('id', $id)->first();
-    //     $FAQ_STATUS = 1;
-
-    //     $faqs->question = $request->question;
-    //     $faqs->answer = $request->answer;
-    //     $faqs->status = $FAQ_STATUS;
-    //     $faqs->save();
-    //     return back()->withSuccess('Member Record Updated Successfully');
-    // }
 
 
 

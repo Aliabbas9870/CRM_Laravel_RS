@@ -97,8 +97,6 @@ Route::get('/admin/task', [TaskController::class, 'TasksListAdmin'])->name('admi
 
 Route::post('/admin/tasks', [TaskController::class, 'store'])->name('admin.tasks.store');
 
-
-
 // user task
 Route::get('/taskList', [TaskController::class, 'ListTasks'])->name('user.taskList');
 Route::get('/user', [TaskController::class, 'userTasks'])->name('user.tasks');
