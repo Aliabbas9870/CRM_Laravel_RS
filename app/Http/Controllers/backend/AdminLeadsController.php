@@ -10,21 +10,6 @@ use App\Models\User;
 
 class AdminLeadsController extends Controller
 {
-    // Display the list of all leads
-    // public function index()
-    // {
-
-    //     $enquiry = AdminEnquireModel ::all();
-
-    //     // echo "<pre>";
-    //     // print_r($enquiry);
-    //     // echo "</pre>";
-    //     // die;
-    //     // Fetch all enquiries
-    //     $users = User::all(); // Fetch all users to assign tasks
-    //     return view('backend.leadList', compact('enquiry', 'users'));
-    //     // return view('backend.leadList', ['enquiry' => AdminEnquireModel::all()]);
-    // }
 
 
 
@@ -41,6 +26,33 @@ class AdminLeadsController extends Controller
 
     // Return the view with enquiries and users
     return view('backend.leadList', compact('enquiry', 'users'));
+}
+
+public function create(Request $request)
+{
+    $data = $request->query(); // This ensures you get only the query parameters (not files or post body)
+
+    $users = User::all(); // Fetch all assignable users
+
+    return view('backend.createTask', compact('data', 'users'));
+}
+
+public function updateStatus(Request $request, $id)
+{
+    // Validate the status input
+    $request->validate([
+        'status' => 'required|in:0,1,2',  // Ensure the status is one of these values
+    ]);
+
+    // Find the enquiry by ID
+    $enquiry =AdminEnquireModel::findOrFail($id);
+
+    // Update the status
+    $enquiry->status = $request->input('status');
+    $enquiry->save();
+
+    // Return a response or redirect
+    return redirect()->back()->with('success', 'Status updated successfully.');
 }
 
     public function assignTask(Request $request)

@@ -87,6 +87,8 @@ Route::post('/AddLeads', [AdminLeadsController::class, 'store'])->name('admin.st
 Route::delete('/DeleteRecordLead/{id}', [AdminLeadsController::class, 'DeleteRecordLead']);
 Route::Put('/EditRecordLead/{id}', [AdminLeadsController::class, 'updateRecordLead']);
 Route::get('/EditRecordLead/{id}', [AdminLeadsController::class, 'EditRecordLead']);
+Route::put('/enquiries/{id}/update-status', [ AdminLeadsController  ::class, 'updateStatus'])->name('enquiries.updateStatus');
+
 
 
 

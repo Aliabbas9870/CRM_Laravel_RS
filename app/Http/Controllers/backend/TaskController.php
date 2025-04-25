@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Mail;
 class TaskController extends Controller
 {
 
+
+
     public function addComment(Request $request, $id)
     {
         $request->validate([
@@ -20,16 +22,14 @@ class TaskController extends Controller
         // Find the task
         $task = Task::find($id);
 
-        // Check if the task already has a comment
         if ($task->comment) {
-            // Append the new comment to the existing comments, with a separator (e.g., line break)
+
             $task->comment .= "\n\n" . $request->comment;
         } else {
-            // If no existing comment, just add the new comment
+
             $task->comment = $request->comment;
         }
 
-        // Save the task with the appended comment
         $task->save();
 
         return redirect()->back()->with('success', 'Comment added successfully!');
@@ -53,11 +53,18 @@ class TaskController extends Controller
         return redirect()->back()->with('success', 'Email sent successfully!');
     }
 
-    public function create()
+    // public function create()
+    // {
+    //     $users = User::all();
+    //     return view('backend.createTask', compact('users'));
+    // }
+    public function create(Request $request)
     {
         $users = User::all();
-        return view('backend.createTask', compact('users'));
+        $data = $request->query(); // Gets ?name=...&email=... from URL
+        return view('backend.createTask', compact('users', 'data'));
     }
+
 
     public function store(Request $request)
     {
@@ -66,7 +73,7 @@ class TaskController extends Controller
             'email' => 'required|email|max:255',
             'description' => 'nullable|string',
             'user_id' => 'nullable|exists:users,id',
-            'number' => 'nullable|string',
+            'phone' => 'nullable|string',
             'note' => 'nullable|string',
             'name' => 'nullable|string',
             'country' => 'nullable|string',
@@ -156,7 +163,7 @@ public function update(Request $request, $id)
         'title' => 'required|string',
         'name' => 'required|string',
         'email' => 'required|email',
-        'number' => 'nullable|string',
+        'phone' => 'nullable|string',
         'language' => 'nullable|string',
         'comment' => 'nullable|string',
         'user_id' => 'nullable|exists:users,id',

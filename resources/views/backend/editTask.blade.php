@@ -33,7 +33,7 @@
 
         <div class="form-group">
             <label for="number">Phone Number</label>
-            <input type="text" name="number" value="{{ old('number', $task->number) }}" class="form-control">
+            <input type="text" name="number" value="{{ old('number', $task->phone) }}" class="form-control">
         </div>
 
         <div class="form-group">

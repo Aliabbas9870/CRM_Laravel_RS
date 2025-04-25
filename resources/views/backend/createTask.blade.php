@@ -57,17 +57,23 @@
         <div class="form-container p-4">
             <form action="{{ route('admin.tasks.store') }}" method="POST">
                 @csrf
+
                 <div class="mb-3">
                     <label for="title" class="form-label">Task Title</label>
-                    <input type="text" name="title" class="form-control" required>
+                    <input type="text" name="title" class="form-control" required
+                        value="{{ old('title', $data['title'] ?? '') }}">
                 </div>
+
                 <div class="mb-3">
-                    <label for="title" class="form-label">Email</label>
-                    <input type="text" name="email" class="form-control" required>
+                    <label for="email" class="form-label">Email</label>
+                    <input type="text" name="email" class="form-control" required value="{{ old('email', $data['email'] ?? '') }}">
+
+
                 </div>
+
                 <div class="mb-3">
                     <label for="description" class="form-label">Description</label>
-                    <textarea name="description" class="form-control" rows="3"></textarea>
+                    <textarea name="description" class="form-control" rows="3">{{ old('description', $data['description'] ?? '') }}</textarea>
                 </div>
 
                 <div class="mb-3">
@@ -75,41 +81,49 @@
                     <select name="user_id" class="form-select">
                         <option value="">Select User</option>
                         @foreach ($users as $user)
-                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                            <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
+                                {{ $user->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
-                        <label for="number" class="form-label">Number</label>
-                        <input type="text" name="number" class="form-control">
+                        <label for="phone" class="form-label">Number</label>
+                        <input type="text" name="phone" class="form-control"
+                            value="{{ old('phone', $data['phone'] ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="note" class="form-label">Note</label>
-                        <input type="text" name="note" class="form-control">
+                        <input type="text" name="note" class="form-control"
+                            value="{{ old('note', $data['note'] ?? '') }}">
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <label for="name" class="form-label">Name</label>
-                        <input type="text" name="name" class="form-control">
+                        <input type="text" name="name" class="form-control"
+                            value="{{ old('name', $data['name'] ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="country" class="form-label">Country</label>
-                        <input type="text" name="country" class="form-control">
+                        <input type="text" name="country" class="form-control"
+                            value="{{ old('country', $data['country'] ?? '') }}">
                     </div>
                 </div>
 
                 <div class="mb-3">
                     <label for="language" class="form-label">Language</label>
-                    <input type="text" name="language" class="form-control">
+                    <input type="text" name="language" class="form-control"
+                        value="{{ old('language', $data['language'] ?? '') }}">
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100">Create Task</button>
             </form>
         </div>
+
     </div>
 
     <!-- Bootstrap JS and dependencies -->

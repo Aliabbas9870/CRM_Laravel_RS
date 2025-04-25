@@ -16,7 +16,7 @@ class Task extends Model
         'title',
         'email',
         'description',
-        'number',
+        'phone',
         'note',
         'name',
         'country',
