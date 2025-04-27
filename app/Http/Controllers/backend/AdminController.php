@@ -73,7 +73,26 @@ class AdminController extends Controller
             $TotalAdminModel = Admin::count();
             $taskTotal = Task::count();
             $TotalTeamMember = User::count();
-            $TotalEnqury = AdminEnquireModel::count();
+            // $TotalEnqury = AdminEnquireModel::count();
+
+            $allEnquiries = AdminEnquireModel::all();
+
+$unique = [];
+$uniqueEnquiries = $allEnquiries->filter(function ($item) use (&$unique) {
+    $email = strtolower(trim($item->email));
+    $phone = preg_replace('/\D+/', '', $item->phone);
+    $key = $email . '-' . $phone;
+
+    if (in_array($key, $unique)) {
+        return false;
+    }
+
+    $unique[] = $key;
+    return true;
+});
+
+$TotalEnqury = $uniqueEnquiries->count();
+
             $completedTasksCount = $tasks->where('is_completed', true)->count();
             $incompleteTasksCount = $tasks->where('is_completed', false)->count();
 

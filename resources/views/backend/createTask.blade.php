@@ -95,9 +95,9 @@
                             value="{{ old('phone', $data['phone'] ?? '') }}">
                     </div>
                     <div class="col-md-6 mb-3">
-                        <label for="note" class="form-label">Note</label>
+                        <label for="note" class="form-label">Prefer contact</label>
                         <input type="text" name="note" class="form-control"
-                            value="{{ old('note', $data['note'] ?? '') }}">
+                            value="{{ old('contact_type=', $data['contact_type'] ?? '') }}">
                     </div>
                 </div>
 

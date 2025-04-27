@@ -181,6 +181,7 @@
                                             <th style="width: 15%;">Email</th>
                                             <th style="width: 10%;">Contact</th>
                                             <th style="width: 10%;">Language</th>
+                                            <th style="width: 8%;">Prefer</th>
                                             <th style="width: 10%;">Comments</th>
                                             <th style="width: 10%;">Assigned To</th>
                                             <th style="width: 5%;">Status</th>
@@ -232,6 +233,7 @@
                                                     @endif
                                                 </td>
                                                 <td>{{ $task->language }}</td>
+                                                <td>{{ $task->note }}</td>
                                                 <td style="max-width: 300px; padding: 0;">
                                                     <div style="max-height: 60px; overflow-y: auto;">
                                                         {!! nl2br(e($task->comment)) !!}
@@ -307,7 +309,7 @@
 
                             <!-- Table to display emails with checkboxes -->
                             <div class="table-responsive">
-                                @if (session('success'))
+                                {{--  @if (session('success'))
                                     <script>
                                         Swal.fire({
                                             title: 'Success!',
@@ -316,7 +318,7 @@
                                             confirmButtonText: 'OK'
                                         });
                                     </script>
-                                @endif
+                                @endif  --}}
 
                                 @php
                                     $currentSort = request('sort', 'desc'); // Get current sort order, default to 'desc'
@@ -351,90 +353,92 @@
                                             <th class="text-center" style="width: 10%;">Actions</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
-                                        @foreach ($enquiry as $enquiry)
-                                            <tr>
-                                                <td><input type="checkbox" class="email-checkbox"
-                                                        value="{{ $enquiry->email }}"></td>
-                                                <td>{{ \Carbon\Carbon::parse($enquiry->created_at)->format('Y-m-d') }}</td>
-                                                <td>{{ $enquiry->name }}</td>
-                                                <td>
-                                                    @if ($enquiry->email)
-                                                        <a href="mailto:{{ $enquiry->email }}?subject=Hello&body=Hello, how are you?"
-                                                            title="Send Email">
-                                                            {{ $enquiry->email }}
-                                                        </a>
-                                                    @else
-                                                        <span class="text-muted">No Email</span>
-                                                    @endif
-                                                </td>
 
 
+                                    @php
+    $shown = [];
+@endphp
 
-                                                <td>
-                                                    @if ($enquiry->phone)
-                                                        <div style="display: flex; gap: 15px;">
-                                                            <a href="https://wa.me/{{ $enquiry->phone }}" target="_blank"
-                                                                title="Open WhatsApp">
-                                                                <i class="fa fa-whatsapp fa-2x text-success"></i>
-                                                            </a>
+<tbody>
+    @foreach ($enquiry as $enquiry)
+        @php
+            $email = strtolower(trim($enquiry->email));
+            $phone = preg_replace('/\D+/', '', $enquiry->phone);
+            $uniqueKey = $email . '-' . $phone;
+        @endphp
 
-                                                            <a href="tel:{{ $enquiry->phone }}" title="Call">
-                                                                <i class="fa fa-phone fa-2x text-primary"></i>
-                                                            </a>
-                                                        </div>
-                                                    @else
-                                                        <div style="display: flex; gap: 15px;">
-                                                            <i class="fa fa-whatsapp fa-2x text-muted"
-                                                                title="No number available"></i>
-                                                            <i class="fa fa-phone fa-2x text-muted"></i>
-                                                        </div>
-                                                    @endif
-                                                </td>
+        @if (!in_array($uniqueKey, $shown))
+            @php
+                $shown[] = $uniqueKey;
+            @endphp
 
+            <tr>
+                <td><input type="checkbox" class="email-checkbox" value="{{ $enquiry->email }}"></td>
+                <td>{{ \Carbon\Carbon::parse($enquiry->created_at)->format('Y-m-d') }}</td>
+                <td>{{ $enquiry->name }}</td>
+                <td>
+                    @if ($enquiry->email)
+                        <a href="mailto:{{ $enquiry->email }}?subject=Hello&body=Hello, how are you?" title="Send Email">
+                            {{ $enquiry->email }}
+                        </a>
+                    @else
+                        <span class="text-muted">No Email</span>
+                    @endif
+                </td>
 
+                <td>
+                    @if ($enquiry->phone)
+                        <div style="display: flex; gap: 15px;">
+                            <a href="https://wa.me/{{ $enquiry->phone }}" target="_blank" title="Open WhatsApp">
+                                <i class="fa fa-whatsapp fa-2x text-success"></i>
+                            </a>
+                            <a href="tel:{{ $enquiry->phone }}" title="Call">
+                                <i class="fa fa-phone fa-2x text-primary"></i>
+                            </a>
+                        </div>
+                    @else
+                        <div style="display: flex; gap: 15px;">
+                            <i class="fa fa-whatsapp fa-2x text-muted" title="No number available"></i>
+                            <i class="fa fa-phone fa-2x text-muted"></i>
+                        </div>
+                    @endif
+                </td>
 
+                <td>{{ $enquiry->phone }}</td>
+                <td>{{ $enquiry->prefer_contact_type }}</td>
+                <td>{{ $enquiry->country }}</td>
 
+                <td class="text-center">
+                    <span class="badge custom-badge
+                        @if($enquiry->status == 1) badge-success
+                        @elseif($enquiry->status == 0) badge-danger
+                        @elseif($enquiry->status == 2) badge-primary
+                        @endif
+                    ">
+                        @if($enquiry->status == 1)
+                            Active
+                        @elseif($enquiry->status == 0)
+                            Not Active
+                        @elseif($enquiry->status == 2)
+                            Done
+                        @endif
+                    </span>
+                </td>
 
-                                                <td>{{ $enquiry->phone }}</td>
-                                                <td>{{ $enquiry-> prefer_contact_type }}</td>
+                <td>
+                    <a href="/EditRecordLead/{{ $enquiry->id }}" class="btn btn-info text-black font-weight-bold">Edit</a>
+                    <form action="/DeleteRecordLead/{{ $enquiry->id }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger"
+                            onclick="return confirm('Are you sure you want to delete this lead?')">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        @endif
+    @endforeach
+</tbody>
 
-                                                <td>{{ $enquiry->country }}</td>
-
-                                                <td class="text-center">
-                                                    <span class="badge custom-badge
-                                                        @if($enquiry->status == 1)
-                                                            badge-success
-                                                        @elseif($enquiry->status == 0)
-                                                            badge-danger
-                                                        @elseif($enquiry->status == 2)
-                                                            badge-primary
-                                                        @endif
-                                                    ">
-                                                        @if($enquiry->status == 1)
-                                                            Active
-                                                        @elseif($enquiry->status == 0)
-                                                            Not Active
-                                                        @elseif($enquiry->status == 2)
-                                                            Done
-                                                        @endif
-                                                    </span>
-                                                </td>
-
-                                                <td>
-                                                    <a href="/EditRecordLead/{{ $enquiry->id }}"
-                                                        class="btn btn-info text-black font-weight-bold">Edit</a>
-                                                    <form action="/DeleteRecordLead/{{ $enquiry->id }}" method="POST"
-                                                        style="display:inline;">
-                                                        @csrf
-                                                        @method('DELETE')
-                                                        <button type="submit" class="btn btn-danger"
-                                                            onclick="return confirm('Are you sure you want to delete this lead?')">Delete</button>
-                                                    </form>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
                                 </table>
                             </div>
                         </div>
@@ -464,14 +468,14 @@
                                 });
 
                                 if (selectedEmails.length > 0) {
-                                    // Set the selected emails in the hidden input field as a JSON string
+
                                     document.getElementById('emails-input').value = JSON.stringify(selectedEmails);
 
-                                    // Ensure the form action is set to the correct URL for handling email submission
+
                                     const emailForm = document.getElementById('email-form');
                                     emailForm.action = '/send-email-form'; // Set the appropriate action URL if not already set
 
-                                    // Log the emails for debugging
+
                                     console.log('Selected Emails:', selectedEmails);
 
                                     // Submit the form

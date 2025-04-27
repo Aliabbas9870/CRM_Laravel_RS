@@ -47,7 +47,7 @@
                                         <th>Language</th>
                                         <th>Date</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,8 +65,8 @@
                                         </td>
                                         <td>
                                             {{-- Make the phone number clickable to open WhatsApp --}}
-                                            <a href="https://wa.me/{{ $task->number }}" target="_blank">
-                                                {{ $task->number }}
+                                            <a href="https://wa.me/{{ $task->phone }}" target="_blank">
+                                                {{ $task->phone }}
                                             </a>
                                         </td>
                                         <td>{{ $task->country }}</td>

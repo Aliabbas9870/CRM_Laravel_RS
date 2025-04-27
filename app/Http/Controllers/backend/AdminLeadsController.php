@@ -14,19 +14,34 @@ class AdminLeadsController extends Controller
 
 
     public function index(Request $request)
-{
-    // Get the sorting order from the URL query parameter (default to 'desc')
-    $sortOrder = $request->get('sort', 'desc');
+    {
+        $sortOrder = $request->get('sort', 'desc');
 
-    // Fetch the enquiries with sorting by created_at field
-    $enquiry = AdminEnquireModel::orderBy('created_at', $sortOrder)->get();
+        $allEnquiries = AdminEnquireModel::orderBy('created_at', $sortOrder)->get();
 
-    // Fetch all users to assign tasks
-    $users = User::all();
+        // Filter out duplicates by normalized email + phone
+        $unique = [];
+        $filtered = $allEnquiries->filter(function ($item) use (&$unique) {
+            $email = strtolower(trim($item->email));
+            $phone = preg_replace('/\D+/', '', $item->phone);
+            $key = $email . '-' . $phone;
 
-    // Return the view with enquiries and users
-    return view('backend.leadList', compact('enquiry', 'users'));
-}
+            if (in_array($key, $unique)) {
+                return false;
+            }
+
+            $unique[] = $key;
+            return true;
+        });
+
+        $users = User::all();
+
+        return view('backend.leadList', [
+            'enquiry' => $filtered,
+            'users' => $users,
+        ]);
+    }
+
 
 public function create(Request $request)
 {
@@ -90,7 +105,7 @@ public function updateStatus(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:enquiries,email',
+            'email' => 'required|email',
             'phone' => 'required|string|max:20',
             'country' => 'required|string|max:100',
             'prefer_contact_type' => 'nullable|string|max:50',
