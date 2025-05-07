@@ -127,8 +127,6 @@ Route::post('/send-custom-email', [MailController::class, 'sendCustomEmail'])->n
 Route::get('/user/compose-email', [UserMailController::class, 'showEmailForm'])->name('user.compose.email');
 // Handle the email submission
 Route::post('/user/send-email', [UserMailController::class, 'sendUserEmail'])->name('user.send.email');
-
-
 // admin contact with team
 Route::get('/admin/compose-email', [UserMailController::class, 'showEmailFormAd'])->name('admin.compose.email');
 // Handle the email submission
@@ -144,3 +142,14 @@ Route::get('/send-message', function () {
 // Route to handle form submission
 Route::post('/send-message', [WhatsAppController::class, 'sendMessage'])->name('sendMessage');
 Route::get('/send-whatsapp/{number}', [WhatsAppController::class, 'sendMessageFromLink'])->name('send.whatsapp');
+
+
+
+
+// test form
+
+use App\Http\Controllers\FormController;
+
+Route::get('/form', [FormController::class, 'showForm']);
+Route::post('/submit-form', [FormController::class, 'submitForm'])->name('form.submit');
+

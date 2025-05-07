@@ -197,7 +197,7 @@
                                                 <td>{{ $task->name }}</td>
                                                 <td>
                                                     <a
-                                                        href="mailto:{{ $task->email }}?subject=Hello&body=Hello, how are you?">
+                                                        href="mailto:{{ $task->email }}?subject=Admin&body=Hello, how are you?">
                                                         {{ $task->email }}
                                                     </a>
                                                 </td>
