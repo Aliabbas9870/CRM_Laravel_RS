@@ -1,6 +1,6 @@
 <!-- Developer : Ali Abbas -->
 <!-- Laravel : Admin Panel-->
-<!-- Date : 25/4/2025-->
+<!-- Date : 17/5/2025-->
 
 
 @extends('backend.layout.main')
@@ -215,9 +215,10 @@
                                                         <i class="fa fa-whatsapp fa-2x"></i>
                                                     </a> --}}
 
-                                                    <a href="https://wa.me/{{ $task->phone }}" target="_blank" title="Send WhatsApp Message">
-                                                        <i class="fa fa-whatsapp fa-2x text-success"></i>
-                                                    </a>
+                                                            <a href="https://wa.me/{{ $task->phone }}" target="_blank"
+                                                                title="Send WhatsApp Message">
+                                                                <i class="fa fa-whatsapp fa-2x text-success"></i>
+                                                            </a>
 
 
                                                             <a href="tel:{{ $task->phone }}" title="Call">
@@ -292,15 +293,7 @@
                                 </a>
                             </div>
                         </div>
-                        {{-- @if (session('success'))
-    <div class="alert alert-success" role="alert">
-        {{ session('success') }}
-    </div>
-@elseif ($errors->any())
-    <div class="alert alert-danger" role="alert">
-        {{ $errors->first() }}
-    </div>
-@endif --}}
+
 
 
                         <!-- Your existing table for displaying emails -->
@@ -340,104 +333,140 @@
                                     <thead>
                                         <tr class="info">
                                             <th style="width: 5%;"><input type="checkbox" id="select-all"></th>
+                                            <th style="width: 4%;">Assign</th>
                                             <th style="width: 12%;">Date</th>
-                                            <th style="width: 14%;">Name</th>
-                                            <th style="width: 15%;">Email</th>
+                                            <th style="width: 8%;">Name</th>
+                                            <th style="width: 13%;">Email</th>
                                             <th style="width: 10%;">Contact</th>
                                             <th style="width: 10%;">Phone</th>
-                                            <th style="width: 10%;">Prefer</th>
+                                            <th style="width: 8%;">Prefer</th>
 
                                             <th style="width: 10%;">Country</th>
 
-                                            <th style="width: 5%;">Status</th>
+                                            <th style="width: 21%;">Status</th>
                                             <th class="text-center" style="width: 10%;">Actions</th>
                                         </tr>
                                     </thead>
 
 
                                     @php
-    $shown = [];
-@endphp
+                                        $shown = [];
+                                    @endphp
 
-<tbody>
-    @foreach ($enquiry as $enquiry)
-        @php
-            $email = strtolower(trim($enquiry->email));
-            $phone = preg_replace('/\D+/', '', $enquiry->phone);
-            $uniqueKey = $email . '-' . $phone;
-        @endphp
+                                    <tbody>
+                                        @foreach ($enquiryall as $enquiry)
+                                            @php
+                                                $email = strtolower(trim($enquiry->email));
+                                                $phone = preg_replace('/\D+/', '', $enquiry->phone);
+                                                $uniqueKey = $email . '-' . $phone;
+                                            @endphp
 
-        @if (!in_array($uniqueKey, $shown))
-            @php
-                $shown[] = $uniqueKey;
-            @endphp
+                                            @if (!in_array($uniqueKey, $shown))
+                                                @php
+                                                    $shown[] = $uniqueKey;
+                                                @endphp
 
-            <tr>
-                <td><input type="checkbox" class="email-checkbox" value="{{ $enquiry->email }}"></td>
-                <td>{{ \Carbon\Carbon::parse($enquiry->created_at)->format('Y-m-d') }}</td>
-                <td>{{ $enquiry->name }}</td>
-                <td>
-                    @if ($enquiry->email)
-                        <a href="mailto:{{ $enquiry->email }}?subject=Hello&body=Hello, how are you?" title="Send Email">
-                            {{ $enquiry->email }}
-                        </a>
-                    @else
-                        <span class="text-muted">No Email</span>
-                    @endif
-                </td>
+                                                <tr>
+                                                    <td><input type="checkbox" class="email-checkbox"
+                                                            value="{{ $enquiry->email }}"></td>
+                                                    <td>
+                                                        <form action="{{ route('admin.tasks.create') }}" method="GET">
+                                                            @csrf
+                                                            <input type="hidden" name="name"
+                                                                value="{{ $enquiry->name }}">
+                                                            <input type="hidden" name="email"
+                                                                value="{{ $enquiry->email }}">
+                                                            <input type="hidden" name="phone"
+                                                                value="{{ $enquiry->phone }}">
+                                                            <input type="hidden" name="country"
+                                                                value="{{ $enquiry->country }}">
+                                                            <input type="hidden" name="url"
+                                                                value="{{ $enquiry->url }}">
+                                                            <input type="hidden" name="contact_type"
+                                                                value="{{ $enquiry->prefer_contact_type }}">
+                                                            <input type="hidden" name="note"
+                                                                value="{{ $enquiry->note }}">
+                                                            <input type="hidden" name="status"
+                                                                value="{{ $enquiry->status }}">
+                                                            <input type="hidden" name="from" value="leads">
+                                                            <input type="hidden" name="enquiry_id"
+                                                                value="{{ $enquiry->id }}">
+                                                            <button type="submit"
+                                                                class="btn btn-success btn-sm">Assign</button>
+                                                        </form>
+                                                    </td>
+                                                    <td>{{ \Carbon\Carbon::parse($enquiry->created_at)->format('Y-m-d') }}
+                                                    </td>
+                                                    <td>{{ $enquiry->name }}</td>
+                                                    <td>
+                                                        @if ($enquiry->email)
+                                                            <a href="mailto:{{ $enquiry->email }}?subject=Hello&body=Hello, how are you?"
+                                                                title="Send Email">
+                                                                {{ $enquiry->email }}
+                                                            </a>
+                                                        @else
+                                                            <span class="text-muted">No Email</span>
+                                                        @endif
+                                                    </td>
 
-                <td>
-                    @if ($enquiry->phone)
-                        <div style="display: flex; gap: 15px;">
-                            <a href="https://wa.me/{{ $enquiry->phone }}" target="_blank" title="Open WhatsApp">
-                                <i class="fa fa-whatsapp fa-2x text-success"></i>
-                            </a>
-                            <a href="tel:{{ $enquiry->phone }}" title="Call">
-                                <i class="fa fa-phone fa-2x text-primary"></i>
-                            </a>
-                        </div>
-                    @else
-                        <div style="display: flex; gap: 15px;">
-                            <i class="fa fa-whatsapp fa-2x text-muted" title="No number available"></i>
-                            <i class="fa fa-phone fa-2x text-muted"></i>
-                        </div>
-                    @endif
-                </td>
+                                                    <td>
+                                                        @if ($enquiry->phone)
+                                                            <div style="display: flex; gap: 15px;">
+                                                                <a href="https://wa.me/{{ $enquiry->phone }}"
+                                                                    target="_blank" title="Open WhatsApp">
+                                                                    <i class="fa fa-whatsapp fa-2x text-success"></i>
+                                                                </a>
+                                                                <a href="tel:{{ $enquiry->phone }}" title="Call">
+                                                                    <i class="fa fa-phone fa-2x text-primary"></i>
+                                                                </a>
+                                                            </div>
+                                                        @else
+                                                            <div style="display: flex; gap: 15px;">
+                                                                <i class="fa fa-whatsapp fa-2x text-muted"
+                                                                    title="No number available"></i>
+                                                                <i class="fa fa-phone fa-2x text-muted"></i>
+                                                            </div>
+                                                        @endif
+                                                    </td>
 
-                <td>{{ $enquiry->phone }}</td>
-                <td>{{ $enquiry->prefer_contact_type }}</td>
-                <td>{{ $enquiry->country }}</td>
+                                                    <td>{{ $enquiry->phone }}</td>
+                                                    <td>{{ $enquiry->prefer_contact_type }}</td>
+                                                    <td>{{ $enquiry->country }}</td>
 
-                <td class="text-center">
-                    <span class="badge custom-badge
-                        @if($enquiry->status == 1) badge-success
-                        @elseif($enquiry->status == 0) badge-danger
-                        @elseif($enquiry->status == 2) badge-primary
-                        @endif
-                    ">
-                        @if($enquiry->status == 1)
-                            Active
-                        @elseif($enquiry->status == 0)
-                            Not Active
-                        @elseif($enquiry->status == 2)
-                            Done
-                        @endif
-                    </span>
-                </td>
-
-                <td>
-                    <a href="/EditRecordLead/{{ $enquiry->id }}" class="btn btn-info text-black font-weight-bold">Edit</a>
-                    <form action="/DeleteRecordLead/{{ $enquiry->id }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger"
-                            onclick="return confirm('Are you sure you want to delete this lead?')">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        @endif
-    @endforeach
-</tbody>
+                                                    <td>
+                                                        <form method="POST"
+                                                            action="{{ route('enquiries.updateStatus', $enquiry->id) }}">
+                                                            @csrf
+                                                            @method('PUT')
+                                                            <select name="status" onchange="this.form.submit()"
+                                                                class="form-control form-control-sm">
+                                                                <option value="1"
+                                                                    {{ $enquiry->status == 1 ? 'selected' : '' }}>Active
+                                                                </option>
+                                                                <option value="0"
+                                                                    {{ $enquiry->status == 0 ? 'selected' : '' }}>Pending
+                                                                </option>
+                                                                <option value="2"
+                                                                    {{ $enquiry->status == 2 ? 'selected' : '' }}>Done
+                                                                </option>
+                                                            </select>
+                                                        </form>
+                                                    </td>
+                                                    <td>
+                                                        <a href="/EditRecordLead/{{ $enquiry->id }}"
+                                                            class="btn btn-info text-black font-weight-bold">Edit</a>
+                                                        <form action="/DeleteRecordLead/{{ $enquiry->id }}"
+                                                            method="POST" style="display:inline;">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger"
+                                                                onclick="return confirm('Are you sure you want to delete this lead?')">Delete</button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
 
                                 </table>
                             </div>
@@ -498,57 +527,16 @@
                 </div>
 
 
-                {{-- <script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelector('#select-all').addEventListener('click', function () {
-        const checkboxes = document.querySelectorAll('.email-checkbox');
-        checkboxes.forEach(checkbox => checkbox.checked = this.checked);
-    });
 
-    document.querySelector('#send-selected-emails').addEventListener('click', function () {
-        const selectedEmails = [];
-        document.querySelectorAll('.email-checkbox:checked').forEach(checkbox => {
-            selectedEmails.push(checkbox.value);
-        });
-
-        if (selectedEmails.length > 0) {
-            const emailQuery = selectedEmails.join(',');
-            window.location.href = '/send-email-form?email=' + encodeURIComponent(emailQuery);
-        } else {
-            alert('Please select at least one email to send.');
-        }
-    });
-
-    document.querySelectorAll('.send-email-btn').forEach(function (button) {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-            const email = button.getAttribute('data-email');
-            window.location.href = '/send-email-form?email=' + encodeURIComponent(email);
-        });
-    });
-}); --}}
-
-
-                </>
             </div>
 
-
-
-
-
-
-
-
-
-            <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
-    @if (session('success'))
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                alert("{{ session('success') }}");
-            });
-        </script>
-    @endif
 
+
+
+
+
+
+
+    </div>
 @endsection

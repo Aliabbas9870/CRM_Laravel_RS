@@ -59,58 +59,62 @@ class AdminController extends Controller
     }
 
     // Display admin dashboard
-    public function index(Request $request)
-    {
-        // Get the sorting order from the URL query parameter (default to 'desc')
-        $sortOrder = $request->get('sort', 'desc');
+ public function index(Request $request)
+{
+    // Default sort order from URL query
+    $sortOrder = $request->get('sort', 'desc');
 
-        // Fetch the enquiries with sorting by created_at field
-        $enquiry = AdminEnquireModel::orderBy('created_at', $sortOrder)->get();
-
-        if (session()->has('email')) {
-            $tasks = Task::orderBy('created_at', 'desc')->get();
-            $Name = session('name') . " " . session('email');
-            $TotalAdminModel = Admin::count();
-            $taskTotal = Task::count();
-            $TotalTeamMember = User::count();
-            // $TotalEnqury = AdminEnquireModel::count();
-
-            $allEnquiries = AdminEnquireModel::all();
-
-$unique = [];
-$uniqueEnquiries = $allEnquiries->filter(function ($item) use (&$unique) {
-    $email = strtolower(trim($item->email));
-    $phone = preg_replace('/\D+/', '', $item->phone);
-    $key = $email . '-' . $phone;
-
-    if (in_array($key, $unique)) {
-        return false;
+    // Check if user is logged in via session
+    if (!session()->has('email')) {
+        return view('backend.adminLogin');
     }
 
-    $unique[] = $key;
-    return true;
-});
+    // Get session values
+    $Name = session('name') . " " . session('email');
 
-$TotalEnqury = $uniqueEnquiries->count();
+    // Fetch all users and tasks
+    $users = User::all();
+    $tasks = Task::orderBy('created_at', 'desc')->get();
 
-            $completedTasksCount = $tasks->where('is_completed', true)->count();
-            $incompleteTasksCount = $tasks->where('is_completed', false)->count();
+    // Count stats
+    $TotalAdminModel = Admin::count();
+    $TotalTeamMember = $users->count();
+    $taskTotal = $tasks->count();
+    $completedTasksCount = $tasks->where('is_completed', true)->count();
+    $incompleteTasksCount = $tasks->where('is_completed', false)->count();
 
-            return view('backend.index', [
-                // 'enquirey' => AdminEnquireModel::get(),
-                'enquiry' => $enquiry, // Pass the sorted enquiries to the view
-                'TotalEnqury' => $TotalEnqury,
-                'TotalTeamMember' => $TotalTeamMember,
-                'TotalAdminModel' => $TotalAdminModel,
-                'tasks' => $tasks,
-                'taskTotal' => $taskTotal,
-                'incompleteTasksCount' => $incompleteTasksCount,
-                'completedTasksCount' => $completedTasksCount
-            ]);
-        } else {
-            return view('backend.adminLogin');
+    // Fetch enquiries and filter unique ones based on email + phone
+    $allEnquiries = AdminEnquireModel::orderBy('created_at', $sortOrder)->get();
+
+    $uniqueKeys = [];
+    $uniqueEnquiries = $allEnquiries->filter(function ($item) use (&$uniqueKeys) {
+        $email = strtolower(trim($item->email));
+        $phone = preg_replace('/\D+/', '', $item->phone);
+        $key = $email . '-' . $phone;
+
+        if (in_array($key, $uniqueKeys)) {
+            return false;
         }
-    }
+
+        $uniqueKeys[] = $key;
+        return true;
+    });
+
+    $TotalEnqury = $uniqueEnquiries->count();
+
+    return view('backend.index', [
+        'enquiryall' => $allEnquiries, // original list (with possible duplicates)
+        'enquirys' => $uniqueEnquiries, // filtered unique list
+        'TotalEnqury' => $TotalEnqury,
+        'users' => $users,
+        'TotalTeamMember' => $TotalTeamMember,
+        'TotalAdminModel' => $TotalAdminModel,
+        'tasks' => $tasks,
+        'taskTotal' => $taskTotal,
+        'completedTasksCount' => $completedTasksCount,
+        'incompleteTasksCount' => $incompleteTasksCount
+    ]);
+}
 
 
 

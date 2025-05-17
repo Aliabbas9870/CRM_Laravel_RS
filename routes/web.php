@@ -89,9 +89,6 @@ Route::Put('/EditRecordLead/{id}', [AdminLeadsController::class, 'updateRecordLe
 Route::get('/EditRecordLead/{id}', [AdminLeadsController::class, 'EditRecordLead']);
 Route::put('/enquiries/{id}/update-status', [ AdminLeadsController  ::class, 'updateStatus'])->name('enquiries.updateStatus');
 
-
-
-
 // Task mangment of admin
 
 Route::get('/admin/tasks/create', [TaskController::class, 'create'])->name('admin.tasks.create');

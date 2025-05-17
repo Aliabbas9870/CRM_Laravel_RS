@@ -1,7 +1,7 @@
 
 <!-- Developer : Ali Abbas -->
 <!-- Laravel : Admin Panel-->
-<!-- Date : 26/4/2025-->
+<!-- Date : 17/5/2025-->
 
 @extends('backend.layout.main')
 @section('title', 'Leads List')
@@ -45,10 +45,7 @@
     $currentSort = request('sort', 'desc'); // Get current sort order, default to 'desc'
 @endphp
 
-{{--  <a href="{{ route('admin.leadList', ['sort' => 'asc']) }}"
-   class="btn btn-sm {{ $currentSort == 'asc' ? 'btn-success' : 'btn-primary' }}">
-   Sort Ascending
-</a>  --}}
+
 
 
 

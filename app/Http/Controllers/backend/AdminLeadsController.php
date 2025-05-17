@@ -89,7 +89,7 @@ public function updateStatus(Request $request, $id)
         $enquiry->status = 'pending'; // Set status to pending
         $enquiry->save();
 
-        return redirect()->route('admin.leadList')->with('success', 'Task assigned successfully to ' . $user->email);
+        return redirect()->back()->with('success', 'Task assigned successfully to ' . $user->email);
     }
 
 
