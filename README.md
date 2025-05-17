@@ -8,7 +8,7 @@
 </p>
 
 ## About Laravel
-
+This Project is CRM of User managment system admin and user side assign task and then get report from user proeprly like portal. this build using laravel 10.
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
 - [Simple, fast routing engine](https://laravel.com/docs/routing).
