@@ -6,6 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>CRM | @yield('title')</title>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
         <!-- Add these lines in your head section -->
         <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

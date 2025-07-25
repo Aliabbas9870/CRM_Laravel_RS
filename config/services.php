@@ -31,4 +31,19 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // config/services.php
+
+    'exotel' => [
+    'sid'       => env('EXOTEL_SID'),
+    'token'     => env('EXOTEL_TOKEN'),
+    'caller_id' => env('EXOTEL_CALLER_ID'),
+],
+
+
+// 'twilio' => [
+//     'sid' => env('TWILIO_SID'),
+//     'token' => env('TWILIO_TOKEN'),
+//     'from' => env('TWILIO_FROM'),
+// ],
+
 ];

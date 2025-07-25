@@ -87,6 +87,31 @@ public function updateStatus(Request $request, $id)
         AdminEnquireModel::create($request->except('_token'));
         return redirect('/admin')->with('success', 'Lead added successfully.');
     }
+
+
+
+public function updateNote(Request $request)
+{
+    if (!$request->ajax()) {
+        return response()->json(['error' => 'Invalid request'], 400);
+    }
+
+    $enquiry = AdminEnquireModel::find($request->id);
+
+    if (!$enquiry) {
+        return response()->json(['error' => 'Enquiry not found'], 404);
+    }
+
+    $enquiry->note = $request->note;
+    // $enquiry->updated_by = auth()->user()->id ?? null;
+    $enquiry->save();
+
+    return response()->json(['success' => true]);
+}
+
+
+
+
     // Show the form for editing the specified lead
     public function EditRecordLead($id)
 {

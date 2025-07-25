@@ -24,6 +24,19 @@ class AdminController extends Controller
         return view('backend.adminLogin'); // Return the admin login view
     }
 
+public function showDetails($id)
+{
+    $task = Task::with('user')->findOrFail($id); // Load user relationship if needed
+
+    return view('backend.viewTaskDetails', compact('task'));
+}
+
+
+  public function howDetails()
+    {
+
+        return view('backend.viewTaskDetails'); // Return the admin login view
+    }
     // Handle admin login
     public function login(Request $request)
     {

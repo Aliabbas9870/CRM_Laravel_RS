@@ -13,27 +13,50 @@ class TaskController extends Controller
 
 
 
-    public function addComment(Request $request, $id)
-    {
-        $request->validate([
-            'comment' => 'required|string|max:500',
-        ]);
+public function addComment(Request $request, $id)
+{
+    $request->validate([
+        'comment' => 'required|string|max:500',
+    ]);
 
-        // Find the task
-        $task = Task::find($id);
+    $task = Task::findOrFail($id);
 
-        if ($task->comment) {
+    $dateTimeNow = now()->format('d/m/Y h:i A'); // e.g., 10/06/2025 02:15 PM
+    $newComment = $request->comment . ' - ' . $dateTimeNow;
 
-            $task->comment .= "\n\n" . $request->comment;
-        } else {
-
-            $task->comment = $request->comment;
-        }
-
-        $task->save();
-
-        return redirect()->back()->with('success', 'Comment added successfully!');
+    if (!empty($task->comment)) {
+        $task->comment .= "\n" . $newComment;
+    } else {
+        $task->comment = $newComment;
     }
+
+    $task->save();
+
+    return redirect()->back()->with('success', 'Comment added successfully!');
+}
+
+
+    // public function addComment(Request $request, $id)
+    // {
+    //     $request->validate([
+    //         'comment' => 'required|string|max:500',
+    //     ]);
+
+    //     // Find the task
+    //     $task = Task::find($id);
+
+    //     if ($task->comment) {
+
+    //         $task->comment .= "\n\n" . $request->comment;
+    //     } else {
+
+    //         $task->comment = $request->comment;
+    //     }
+
+    //     $task->save();
+
+    //     return redirect()->back()->with('success', 'Comment added successfully!');
+    // }
 
 
     public function sendEmail(Request $request)

@@ -37,8 +37,8 @@
         </div>
 
         <div class="form-group">
-            <label for="language">Language</label>
-            <input type="text" name="language" value="{{ old('language', $task->language) }}" class="form-control">
+            <label for="language">note</label>
+            <input type="text" name="description" value="{{ old('language', $task->description) }}" class="form-control">
         </div>
 
         <div class="form-group">

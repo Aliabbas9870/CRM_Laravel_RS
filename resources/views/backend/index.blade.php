@@ -1,6 +1,6 @@
 <!-- Developer : Ali Abbas -->
 <!-- Laravel : Admin Panel-->
-<!-- Date : 17/5/2025-->
+<!-- Date : 11/6/2025-->
 
 
 @extends('backend.layout.main')
@@ -101,7 +101,7 @@
                                 <span class="slight"><i class="fa fa-play fa-rotate-270"> </i>
                                 </span>
                             </div>
-                            <h3> Incomplete Task</h3>
+                            <h3> Inprocess Task</h3>
                             <h2>
                                 <span class="count-number text-center"
                                     style="color: aliceblue;">{{ $incompleteTasksCount }}</span>
@@ -150,7 +150,7 @@
                 <!-- Single row with "Create Task" and "Show Tasks" buttons -->
                 <div class="d-flex justify-content-between m-3 ">
                     <h1></h1>
-                    <a href="{{ route('admin.tasks.create') }}" class="btn btn-primary btn-sm ">Create Task</a>
+                    <a href="{{ route('admin.tasks.create') }}" class="btn btn-primary btn-sm ">Create Leads</a>
                     {{-- <button onclick="toggleTasks()" class="btn btn-success btn-sm m-3">Show Assign Tasks</button> --}}
                 </div>
                 <h1></h1>
@@ -161,7 +161,7 @@
                         <div class="panel-heading">
                             <div class="btn-group" id="buttonexport">
                                 <a href="#">
-                                    <h4>Task List</h4>
+                                    <h4>Assign Leads</h4>
                                 </a>
                             </div>
                         </div>
@@ -176,13 +176,16 @@
                                                 <i class="fa fa-envelope fa-2x"></i>
                                             </a>
                                         </td> --}}
+                                            <th style="width: 9%;">View Details</th>
                                             <th style="width: 14%;">Task Title</th>
                                             <th style="width: 14%;">Name</th>
                                             <th style="width: 15%;">Email</th>
                                             <th style="width: 10%;">Contact</th>
-                                            <th style="width: 10%;">Language</th>
+                                            <th style="width: 10%;">Note</th>
                                             <th style="width: 8%;">Prefer</th>
                                             <th style="width: 10%;">Comments</th>
+
+
                                             <th style="width: 10%;">Assigned To</th>
                                             <th style="width: 5%;">Status</th>
                                             <th style="width: 5%;">Action</th>
@@ -193,6 +196,10 @@
                                         @foreach ($tasks->sortByDesc('created_at') as $task)
                                             <tr>
                                                 <td>{{ \Carbon\Carbon::parse($task->created_at)->format('Y-m-d') }}</td>
+                                               <td>
+    <a href="{{ route('admin.detailsView', ['id' => $task->id]) }}" class="btn btn-primary btn-sm">View</a>
+</td>
+
                                                 <td>{{ $task->title }}</td>
                                                 <td>{{ $task->name }}</td>
                                                 <td>
@@ -233,13 +240,39 @@
                                                         </div>
                                                     @endif
                                                 </td>
-                                                <td>{{ $task->language }}</td>
+                                                <td>{{ $task->description }}</td>
                                                 <td>{{ $task->note }}</td>
-                                                <td style="max-width: 300px; padding: 0;">
+                                                {{--  <td style="max-width: 300px; padding: 0;">
                                                     <div style="max-height: 60px; overflow-y: auto;">
                                                         {!! nl2br(e($task->comment)) !!}
                                                     </div>
-                                                </td>
+                                                </td>  --}}
+
+
+                                               <td style="vertical-align: top; min-width: 200px;">
+    {{-- Add New Comment --}}
+    <form action="{{ route('task.addComment', $task->id) }}" method="POST">
+        @csrf
+        <textarea name="comment" placeholder="Add a comment" class="form-control" rows="2" required></textarea>
+        <button type="submit" class="btn btn-primary btn-sm mt-1">Add</button>
+    </form>
+
+    {{-- Show All Comments (formatted, scrollable) --}}
+    <div style="
+        max-height: 4.9em;
+        overflow-y: auto;
+        margin-top: 5px;
+        border: 1px solid #ddd;
+        padding: 5px;
+        background: #f9f9f9;
+        border-radius: 5px;
+        line-height: 1.8em;
+        font-size: 13px;
+        white-space: pre-wrap;
+    ">
+        {{ $task->comment }}
+    </div>
+</td>
 
 
                                                 <td>
@@ -257,7 +290,7 @@
                                                     @if ($task->is_completed)
                                                         <span class="badge badge-success custom-badge">Completed</span>
                                                     @else
-                                                        <span class="badge badge-danger custom-badge">Panding</span>
+                                                        <span class="badge badge-danger custom-badge">Inprocess</span>
                                                     @endif
                                                 </td>
                                                 <td>
@@ -289,7 +322,7 @@
                         <div class="panel-heading">
                             <div class="btn-group" id="buttonexport">
                                 <a href="#">
-                                    <h4>Leads list</h4>
+                                    <h4>Leads</h4>
                                 </a>
                             </div>
                         </div>
@@ -329,22 +362,23 @@
                                         Descending </a>
 
                                 </div>
-                                <table id="dataTableExample1" class="table table-bordered table-striped table-hover">
+                                <table id="dataTableExample1" class="table table-bordered table-striped table-hover" style=" ">
                                     <thead>
                                         <tr class="info">
-                                            <th style="width: 5%;"><input type="checkbox" id="select-all"></th>
-                                            <th style="width: 4%;">Assign</th>
-                                            <th style="width: 12%;">Date</th>
+                                            <th style="width: 3%;"><input type="checkbox" id="select-all"></th>
+                                            <th style="width: 5%;">Assign</th>
+                                            <th style="width: 6%;">Date</th>
                                             <th style="width: 8%;">Name</th>
-                                            <th style="width: 13%;">Email</th>
-                                            <th style="width: 10%;">Contact</th>
-                                            <th style="width: 10%;">Phone</th>
-                                            <th style="width: 8%;">Prefer</th>
+                                            <th style="width: 15%;">Email</th>
+                                            <th style="width: 5%;">Contact</th>
+                                            <th style="width: 13%;">Notes</th>
+                                            <th style="width: 8%;">Phone</th>
+                                            <th style="width: 6%;">Prefer</th>
 
-                                            <th style="width: 10%;">Country</th>
+                                            <th style="width: 8%;">Country</th>
 
-                                            <th style="width: 21%;">Status</th>
-                                            <th class="text-center" style="width: 10%;">Actions</th>
+                                            <th style="width: 14% !important;">Status</th>
+                                            <th class="text-center" style="width: 5%;">Actions</th>
                                         </tr>
                                     </thead>
 
@@ -429,6 +463,16 @@
                                                         @endif
                                                     </td>
 
+
+                                                    <td style="padding: 5px;">
+                                                        <textarea class="note-input" data-id="{{ $enquiry->id }}" placeholder="Type your note...">{{ $enquiry->note }}</textarea>
+                                                        <button class="save-note-btn"
+                                                            data-id="{{ $enquiry->id }}">Save</button>
+                                                    </td>
+
+
+
+
                                                     <td>{{ $enquiry->phone }}</td>
                                                     <td>{{ $enquiry->prefer_contact_type }}</td>
                                                     <td>{{ $enquiry->country }}</td>
@@ -441,13 +485,13 @@
                                                             <select name="status" onchange="this.form.submit()"
                                                                 class="form-control form-control-sm">
                                                                 <option value="1"
-                                                                    {{ $enquiry->status == 1 ? 'selected' : '' }}>Active
+                                                                    {{ $enquiry->status == 1 ? 'selected' : '' }}>Pending
                                                                 </option>
                                                                 <option value="0"
-                                                                    {{ $enquiry->status == 0 ? 'selected' : '' }}>Pending
+                                                                    {{ $enquiry->status == 0 ? 'selected' : '' }}>Inprocess
                                                                 </option>
                                                                 <option value="2"
-                                                                    {{ $enquiry->status == 2 ? 'selected' : '' }}>Done
+                                                                    {{ $enquiry->status == 2 ? 'selected' : '' }}>Completed
                                                                 </option>
                                                             </select>
                                                         </form>
@@ -519,7 +563,30 @@
 
 
 
+                        <script>
+                            $(document).ready(function() {
+                                $.ajaxSetup({
+                                    headers: {
+                                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
+                                        'X-Requested-With': 'XMLHttpRequest'
+                                    }
+                                });
 
+                                $(document).on('click', '.save-note-btn', function() {
+                                    let id = $(this).data('id');
+                                    let note = $('.note-input[data-id="' + id + '"]').val();
+
+                                    $.post("{{ route('enquiries.updateNote') }}", {
+                                        id: id,
+                                        note: note
+                                    }, function(res) {
+                                        alert('Note saved!');
+                                    }).fail(function() {
+                                        alert('Failed to save');
+                                    });
+                                });
+                            });
+                        </script>
 
 
 

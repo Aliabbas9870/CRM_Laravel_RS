@@ -104,9 +104,9 @@
                                                     @csrf
                                                     @method('PUT')
                                                     <select name="status" onchange="this.form.submit()" class="form-control form-control-sm">
-                                                        <option value="1" {{ $enquiry->status == 1 ? 'selected' : '' }}>Active</option>
-                                                        <option value="0" {{ $enquiry->status == 0 ? 'selected' : '' }}>Pending</option>
-                                                        <option value="2" {{ $enquiry->status == 2 ? 'selected' : '' }}>Done</option>
+                                                        <option value="1" {{ $enquiry->status == 1 ? 'selected' : '' }}>Pending</option>
+                                                        <option value="0" {{ $enquiry->status == 0 ? 'selected' : '' }}>Inprocess</option>
+                                                        <option value="2" {{ $enquiry->status == 2 ? 'selected' : '' }}>Completed</option>
                                                     </select>
                                                 </form>
                                             </td>

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\frontend;
+use Plivo\RestClient;
 
 use App\Http\Controllers\Controller;
 use App\Models\backend\AdminEnquireModel;

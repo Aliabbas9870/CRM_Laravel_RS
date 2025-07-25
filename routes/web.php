@@ -9,7 +9,7 @@ use App\Http\Controllers\Frontend\UserMailController;
 use App\Http\Controllers\frontend\WhatsAppController;
 use App\Http\Controllers\TwilioController;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CallController;
 /*
 |----------------------------------------------------------------------
 | Web Routes
@@ -82,6 +82,8 @@ Route::post('/admin/enquiries/assign', [AdminLeadsController::class, 'assignTask
 
 // Leads management routes
 Route::get('/LeadList', [AdminLeadsController::class, 'index'])->name("admin.leadList");
+Route::get('/showDetails/{id}', [AdminController::class, 'showDetails'])->name("admin.detailsView");
+
 Route::get('/AddLeads', [AdminLeadsController::class, 'addLeads'])->name('admin.addLeads');
 Route::post('/AddLeads', [AdminLeadsController::class, 'store'])->name('admin.store');
 Route::delete('/DeleteRecordLead/{id}', [AdminLeadsController::class, 'DeleteRecordLead']);
@@ -89,6 +91,8 @@ Route::Put('/EditRecordLead/{id}', [AdminLeadsController::class, 'updateRecordLe
 Route::get('/EditRecordLead/{id}', [AdminLeadsController::class, 'EditRecordLead']);
 Route::put('/enquiries/{id}/update-status', [ AdminLeadsController  ::class, 'updateStatus'])->name('enquiries.updateStatus');
 
+
+Route::post('/enquiries/update-note', [AdminLeadsController::class, 'updateNote'])->name('enquiries.updateNote');
 // Task mangment of admin
 
 Route::get('/admin/tasks/create', [TaskController::class, 'create'])->name('admin.tasks.create');
@@ -108,6 +112,14 @@ Route::Delete('/tasks/{id}', [TaskController::class, 'DeleteTask'])->name('task.
 
 
 // call system
+
+
+
+Route::post('/call-enquiry/{id}', [CallController::class, 'callEnquiry'])->name('call.enquiry');
+
+Route::get("/cal",[CallController::class, 'call']);
+
+
 
 Route::get('/SMS', [TwilioController  ::class, 'Sms']);
 Route::Post('/SMS', [TwilioController  ::class, 'SendSMS']);
