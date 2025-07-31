@@ -367,6 +367,7 @@
                                         <tr class="info">
                                             <th style="width: 3%;"><input type="checkbox" id="select-all"></th>
                                             <th style="width: 5%;">Assign</th>
+                                            <th style="width: 5%;">Quick Assign</th>
                                             <th style="width: 6%;">Date</th>
                                             <th style="width: 8%;">Name</th>
                                             <th style="width: 15%;">Email</th>
@@ -429,6 +430,36 @@
                                                                 class="btn btn-success btn-sm">Assign</button>
                                                         </form>
                                                     </td>
+
+                                                    <td>
+    <form action="{{ route('admin.tasks.store') }}" method="POST">
+        @csrf
+
+                         {{-- Dropdown --}}
+        <select name="user_id" class="form-control mb-1" required>
+            <option value="">Assign to User</option>
+            @foreach($users as $user)
+                <option value="{{ $user->id }}">{{ $user->name }} ({{ $user->email }})</option>
+            @endforeach
+        </select>
+
+                      {{-- Hidden Enquiry Data --}}
+        <input type="hidden" name="name" value="{{ $enquiry->name }}">
+        <input type="hidden" name="email" value="{{ $enquiry->email }}">
+        <input type="hidden" name="phone" value="{{ $enquiry->phone }}">
+        <input type="hidden" name="country" value="{{ $enquiry->country }}">
+        <input type="hidden" name="note" value="{{ $enquiry->note }}">
+        <input type="hidden" name="prefer_contact_type" value="{{ $enquiry->prefer_contact_type  }}">
+
+        <input type="hidden" name="url" value="{{ $enquiry->url }}">
+        <input type="hidden" name="status" value="{{ $enquiry->status }}">
+        <input type="hidden" name="title" value="Lead - {{ $enquiry->name }}">
+        <input type="hidden" name="description" value="Assigned ">
+
+        <button type="submit" class="btn btn-success btn-sm">Quick Assign</button>
+    </form>
+</td>
+
                                                     <td>{{ \Carbon\Carbon::parse($enquiry->created_at)->format('Y-m-d') }}
                                                     </td>
                                                     <td>{{ $enquiry->name }}</td>

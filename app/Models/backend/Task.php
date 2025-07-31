@@ -18,8 +18,10 @@ class Task extends Model
         'description',
         'phone',
         'note',
+        'url',
         'name',
         'country',
+        'prefer_contact_type',
         'language',
         'is_completed',
         'comment'

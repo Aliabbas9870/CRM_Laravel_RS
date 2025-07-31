@@ -115,6 +115,9 @@ public function showDetails($id)
 
     $TotalEnqury = $uniqueEnquiries->count();
 
+$users = \App\Models\User::all(); // ✅ all users for dropdown
+
+
     return view('backend.index', [
         'enquiryall' => $allEnquiries, // original list (with possible duplicates)
         'enquirys' => $uniqueEnquiries, // filtered unique list
@@ -123,6 +126,7 @@ public function showDetails($id)
         'TotalTeamMember' => $TotalTeamMember,
         'TotalAdminModel' => $TotalAdminModel,
         'tasks' => $tasks,
+
         'taskTotal' => $taskTotal,
         'completedTasksCount' => $completedTasksCount,
         'incompleteTasksCount' => $incompleteTasksCount

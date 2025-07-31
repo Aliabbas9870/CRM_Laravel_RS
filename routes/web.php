@@ -113,17 +113,13 @@ Route::Delete('/tasks/{id}', [TaskController::class, 'DeleteTask'])->name('task.
 
 // call system
 
+  Route::get('/call', [CallController::class, 'index'])->name('call.index');
+    Route::post('/call-now', [CallController::class, 'callNow'])->name('call.now');
+    Route::post('/call-status', [CallController::class, 'handleStatus'])->name('exotel.status');
 
 
-Route::post('/call-enquiry/{id}', [CallController::class, 'callEnquiry'])->name('call.enquiry');
-
-Route::get("/cal",[CallController::class, 'call']);
 
 
-
-Route::get('/SMS', [TwilioController  ::class, 'Sms']);
-Route::Post('/SMS', [TwilioController  ::class, 'SendSMS']);
-Route::post('/Call', [TwilioController::class, 'MakeCall']);
 
 Route::get('/send-email-form', [MailController::class, 'sendEmailForm'])->name('send-email-form');
 // Route to handle form submission (POST request)

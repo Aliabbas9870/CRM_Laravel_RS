@@ -112,7 +112,7 @@
                           </td>
                             <td>{{ $task->description }}</td>
                             <td>{{ $task->language }}</td>
-                            <td>{{ $task->note }}</td>
+                            <td>{{ $task->prefer_contact_type }}</td>
 
                             <td>{{ $task->created_at ? $task->created_at->format('Y-m-d') : 'N/A' }}</td>
                             <td>

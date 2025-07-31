@@ -11,10 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('call_logs', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-        });
+       Schema::create('call_logs', function (Blueprint $table) {
+    $table->id();
+    $table->string('agent_email');
+    $table->string('to');
+    $table->string('name')->nullable();
+    $table->string('status')->default('initiated');
+    $table->string('call_id')->nullable();
+    $table->string('duration')->nullable();
+    $table->timestamps();
+});
     }
 
     /**

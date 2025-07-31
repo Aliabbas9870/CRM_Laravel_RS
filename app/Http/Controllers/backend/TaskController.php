@@ -99,6 +99,9 @@ public function addComment(Request $request, $id)
             'phone' => 'nullable|string',
             'note' => 'nullable|string',
             'name' => 'nullable|string',
+            'url' => 'nullable|string',
+            'prefer_contact_type' => 'nullable|string',
+
             'country' => 'nullable|string',
             'language' => 'nullable|string',
         ]);

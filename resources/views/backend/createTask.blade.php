@@ -96,8 +96,8 @@
                     </div>
                     <div class="col-md-6 mb-3">
                         <label for="note" class="form-label">Prefer contact</label>
-                        <input type="text" name="note" class="form-control"
-                            value="{{ old('contact_type=', $data['contact_type'] ?? '') }}">
+                        <input type="text" name="prefer_contact_type" class="form-control"
+                            value="{{ old('prefer_contact_type=', $data['prefer_contact_type'] ?? '') }}">
                     </div>
                 </div>
 
